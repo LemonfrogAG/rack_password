@@ -31,6 +31,13 @@ module RackPassword
 
     private
 
+    def app_name
+      return Rails.application.class.module_parent_name if defined?(Rails) && Rails.version.to_i >= 6
+      return Rails.application.class.parent_name if defined?(Rails)
+
+      ''
+    end
+
     def cookie_params(domain, code)
       "#{@options[:key]}=#{code}; "\
       "domain=#{domain}; "\
@@ -48,7 +55,6 @@ module RackPassword
     end
 
     def fill_in_application_name(view)
-      app_name = defined?(Rails) ? Rails.application.class.parent_name : ''
       view.sub('__App_Name__', app_name)
     end
 
